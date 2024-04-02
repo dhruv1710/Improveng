@@ -7,5 +7,9 @@ final router = GoRouter(initialLocation: '/', routes: [
   GoRoute(
       path: '/grammar_correction',
       builder: (context, state) => Grammar(),
-      name: 'grammar')
+      name: 'grammar'),
+  GoRoute(
+      path: '/text-improvement',
+      builder: (context, state) => Grammar(),
+      name: 'text-improvement'),
 ]);
