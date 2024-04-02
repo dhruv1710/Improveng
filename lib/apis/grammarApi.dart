@@ -6,8 +6,8 @@ import 'package:improveng/constants.dart';
 class TextAPI{
   final _client = http.Client();
   grammar_correction(String text) async {
-    print(text);
-    print(text.runtimeType);
+    // print(text);
+    // print(text.runtimeType);
     final response = await _client.get(Uri.parse("$host/grammar?text=$text"));
     switch (response.statusCode) {
       case 200:
@@ -15,6 +15,20 @@ class TextAPI{
       default:
       // print(response.body);
       return 'Error';
+    }
+  }
+  text_improvement(String text)async{
+    final response = await _client.get(Uri.parse("$host/text-improvements?text=$text"));
+    print(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return {
+          'text': text,
+          'errors': jsonDecode(response.body)['improvements']
+        };
+      default:
+        // print(response.body);
+        return 'Error';
     }
   }
 }

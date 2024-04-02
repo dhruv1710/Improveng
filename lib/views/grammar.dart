@@ -1,15 +1,14 @@
-import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:improveng/apis/photoApi.dart';
 import 'package:improveng/controllers/grammarProvider.dart';
-import 'package:improveng/controllers/photoProvider.dart';
+import 'package:improveng/views/text_improvements.dart';
 
 class Grammar extends ConsumerWidget {
-  const Grammar({super.key});
+  Grammar({super.key});
 
+  String ctext = '';
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final grammar = ref.watch(grammarProvider);
@@ -37,16 +36,14 @@ class Grammar extends ConsumerWidget {
                     // int index = 0;
                     // int errorsIdx = 0;
                     List errors = value['errors'];
-                    List starts = [];
-                    List ends = [];
+                   
                     List<dynamic> texts = value['text'].split('');
-                    int index = 0;
-                    int errorsIdx = 0;
+                    
                     List<InlineSpan>? textSpans = texts.map<InlineSpan>((e) {
                       return TextSpan(text: e);
                       
                     }).toList();
-                    for (final e in errors) {
+                    for (final e in errors.reversed) {
                       textSpans.replaceRange(
                           e['startIndex'], e['endIndex'], [TextSpan(text: e['suggestion'],
                     style: Theme.of(context)
@@ -54,7 +51,13 @@ class Grammar extends ConsumerWidget {
                         .bodyMedium!
                         .copyWith(decoration: TextDecoration.underline),recognizer: TapGestureRecognizer()..onTap = ()=>errorDialog(context,e))]);
                     }
-                    print(texts);
+                    String correctText = value['text'];
+                    
+                    for(final e in errors.reversed){
+                      correctText = correctText.replaceRange(e['startIndex'], e['endIndex'], e['suggestion']);
+                    }
+                    ctext = correctText;
+                    print(ctext);
                     // return Text('loloolo');
                     
                     // print('lol');
@@ -87,6 +90,7 @@ class Grammar extends ConsumerWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(onPressed: (){Navigator.of(context).push(MaterialPageRoute(builder: (context)=>TextImprovements(ctext)));},child: Text('Next'),),
     );
   }
   errorDialog(context,error){
