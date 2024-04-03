@@ -1,16 +1,22 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
 import 'package:improveng/apis/grammarApi.dart';
+import 'package:improveng/controllers/pastEsssays.dart';
+import 'package:improveng/views/last.dart';
 
-class TextImprovements extends StatefulWidget {
-  const TextImprovements(this.text, {super.key,});
-final String text;
+class TextImprovement extends ConsumerStatefulWidget {
+  TextImprovement(this.text,{super.key});
+  String text;
   @override
-  State<TextImprovements> createState() => _TextImprovementsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _TextImprovementState();
 }
 
-class _TextImprovementsState extends State<TextImprovements> {
+class _TextImprovementState extends ConsumerState<TextImprovement> {
+
   bool runnedAI = false;
   List<InlineSpan> ts = [];
   @override
@@ -39,6 +45,18 @@ class _TextImprovementsState extends State<TextImprovements> {
         .bodyMedium!
         .copyWith(decoration: TextDecoration.underline),recognizer: TapGestureRecognizer()..onTap = ()=>errorDialog(context,e))]);
     }
+    String t = response['text'];
+    for (final e in errors.reversed) {
+      t = t.replaceRange(e['startIndex'], e['endIndex'], e['suggestions'].last);
+    }
+    var essayBox = await Hive.openBox('essays');
+    Map data = essayBox.getAt(essayBox.length-1);
+    // need to provide list as hive does not accept string
+    data['text'] = [t];
+    data['improvements'] = errors;
+    essayBox.putAt(essayBox.length-1,data);
+    ref.read(pastEssayProvider.notifier).addEssay(data, essayBox.length - 1);
+    print(ref.watch(pastEssayProvider));
     print(texts);
     setState(() {
       runnedAI=true;
@@ -46,7 +64,7 @@ class _TextImprovementsState extends State<TextImprovements> {
     });
   }
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,) {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -70,6 +88,9 @@ class _TextImprovementsState extends State<TextImprovements> {
                     )])
         ],
       ),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LastPage()));
+      },child: Text('Next'),),
     );
   }
   errorDialog(context,error){

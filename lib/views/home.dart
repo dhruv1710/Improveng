@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:improveng/controllers/pastEsssays.dart';
+import 'package:improveng/views/pastEssay.dart';
 import 'package:improveng/views/photo.dart';
 
 class Home extends ConsumerWidget {
@@ -9,6 +13,7 @@ class Home extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final pastEssays = ref.watch(pastEssayProvider);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -60,8 +65,8 @@ class Home extends ConsumerWidget {
               )
             ],
           ),
-          SliverList(
-              delegate: SliverChildListDelegate([
+          SliverList.list(
+              children: [
             // Text(
             //   'Hello Dhruv',
             //   style: Theme.of(context).textTheme.headlineSmall,
@@ -78,6 +83,7 @@ class Home extends ConsumerWidget {
                   height: 200,
                   child: InkWell(
                     onTap: () {
+                      // Hive.openBox('essays').then((Box value) => value.clear());
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => TakePictureScreen()));
                     },
@@ -95,10 +101,17 @@ class Home extends ConsumerWidget {
                             size: 50,
                           ),
                           Text(
-                            'Take Photo',
+                            'Upload Essay',
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineMedium!
+                                .copyWith(color: Colors.white),
+                          ),
+                          Text(
+                            'Take photo of your essay',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
                                 .copyWith(color: Colors.white),
                           ),
                         ],
@@ -110,30 +123,74 @@ class Home extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Text(
-                'Continue sessions',
+                'Past sessions',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              child: SizedBox(
-                  height: 300,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Essay 1',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.black),
-                      ),
-                    ),
-                  )),
-            ),
-          ])),
+            FutureBuilder(
+  future: pastEssays,
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Center(child: CircularProgressIndicator());
+    } else if (snapshot.hasError) {
+      return Center(child: Text('Error: ${snapshot.error}'));
+    } else if (snapshot.hasData) {
+      print('sanpshot ${snapshot.data}');
+      return ListView.builder(
+        shrinkWrap: true,
+        itemCount: snapshot.data!.keys.length,
+        itemBuilder: (context, idx) {
+          print(snapshot.data);
+          return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        child: SizedBox(
+                            height: 300,
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      snapshot.data![(snapshot.data!.length-1) - idx]['text'][0] ??
+                                          'Essay ${idx + 1}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(color: Colors.black),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                      width: 300,
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PastEssayView(
+                                                            snapshot.data![idx]
+                                                                ['grammar'],
+                                                            snapshot.data![idx][
+                                                                'improvements'])));
+                                          },
+                                          child:
+                                              Text('Mistakes & Improvements')))
+                                ],
+                              ),
+                            )),
+                      );
+        },
+      );
+    } else {
+      return Center(child: Text('No data'));
+    }
+  },
+)
+              
+            
+            
+          ]),
         ],
       ),
     );

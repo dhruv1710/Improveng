@@ -2,6 +2,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
 import 'package:improveng/controllers/grammarProvider.dart';
 import 'package:improveng/views/text_improvements.dart';
 
@@ -58,6 +59,8 @@ class Grammar extends ConsumerWidget {
                     }
                     ctext = correctText;
                     print(ctext);
+                    Hive.openBox('essays').then((Box essayBox) => essayBox.add({'grammar':errors}));
+                    
                     // return Text('loloolo');
                     
                     // print('lol');
@@ -90,7 +93,7 @@ class Grammar extends ConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){Navigator.of(context).push(MaterialPageRoute(builder: (context)=>TextImprovements(ctext)));},child: Text('Next'),),
+      floatingActionButton: FloatingActionButton(onPressed: (){Navigator.of(context).push(MaterialPageRoute(builder: (context)=>TextImprovement(ctext)));},child: Text('Next'),),
     );
   }
   errorDialog(context,error){

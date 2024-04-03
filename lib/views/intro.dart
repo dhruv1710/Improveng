@@ -174,7 +174,7 @@ class _IntroState extends State<Intro> {
             children: [
               Text(
                 "Consistently and you will change yourself",
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0),
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0,),
               ),
               Padding(
                   padding: EdgeInsets.fromLTRB(
