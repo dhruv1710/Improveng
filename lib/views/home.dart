@@ -110,10 +110,10 @@ class Home extends ConsumerWidget {
                           ),
                           Text(
                             'Take photo of your essay',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: Colors.white),
+                            style: TextStyle(
+                                color: Color.fromARGB(120, 255, 255, 255),
+                                fontWeight: FontWeight.w500),
+                            
                           ),
                         ],
                       ),
@@ -136,12 +136,10 @@ class Home extends ConsumerWidget {
     } else if (snapshot.hasError) {
       return Center(child: Text('Error: ${snapshot.error}'));
     } else if (snapshot.hasData) {
-      print('sanpshot ${snapshot.data}');
       return ListView.builder(
         shrinkWrap: true,
         itemCount: snapshot.data!.keys.length,
         itemBuilder: (context, idx) {
-          print(snapshot.data);
           return Padding(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: SizedBox(
@@ -150,34 +148,50 @@ class Home extends ConsumerWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
-                              child: Column(
-                                children: [
-                                  Center(
-                                    child: Text(
-                                      snapshot.data![(snapshot.data!.length-1) - idx]['text'][0] ??
-                                          'Essay ${idx + 1}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .copyWith(color: Colors.black),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text('Essay #${idx+1}',style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge!
+                                            .copyWith(color: Colors.black),),
+                                    Center(
+                                      child: Text(
+                                        snapshot.data![(snapshot.data!.length-1) - idx]['text'][0] ??
+                                            'No text',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(color: Colors.black),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                      width: 300,
-                                      child: ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        PastEssayView(
-                                                            snapshot.data![idx]
-                                                                ['grammar'],
-                                                            snapshot.data![idx][
-                                                                'improvements'])));
-                                          },
-                                          child:
-                                              Text('Mistakes & Improvements')))
-                                ],
+                                    SizedBox(
+                                        width: 300,
+                                        child: FilledButton(
+                                          
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          PastEssayView({'essay':
+                                                               snapshot
+                                                                    .data![(snapshot
+                                                                            .data!
+                                                                            .length -
+                                                                        1) -
+                                                                    idx]['text'][0],'id':idx,
+                                                              },
+                                                              snapshot.data![idx]
+                                                                  ['grammar'],
+                                                              snapshot.data![idx][
+                                                                  'improvements'])));
+                                            },
+                                            child:
+                                                Text('Mistakes & Improvements')))
+                                  ],
+                                ),
                               ),
                             )),
                       );

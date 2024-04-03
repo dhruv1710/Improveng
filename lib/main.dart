@@ -19,9 +19,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Improveng',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple,),
         textTheme: GoogleFonts.fredokaTextTheme(Theme.of(context).textTheme),
         useMaterial3: true,
+        cardTheme: CardTheme(elevation: 5),
+        filledButtonTheme: FilledButtonThemeData(style: ButtonStyle(elevation: MaterialStatePropertyAll(10)))
       ),
       routerConfig: router,
     );
