@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -81,16 +82,16 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             // Attempt to take a picture and get the file `image`
             // where it was saved.
             final image = await _controller.takePicture();
-            
+           
             if (!context.mounted) return;
 
             
             await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => DisplayPictureScreen(
+                builder: (context) => Edit(
                   // Pass the automatically generated path to
                   // the DisplayPictureScreen widget.
-                  imagePath: image.path,
+                  image.path,
                 ),
               ),
             );
@@ -106,19 +107,38 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 }
 
 // A widget that displays the picture taken by the user.
-class DisplayPictureScreen extends ConsumerWidget {
+class Edit extends ConsumerStatefulWidget {
+  const Edit(this.imagePath,{super.key});
   final String imagePath;
-
-  const DisplayPictureScreen({super.key, required this.imagePath});
-
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _EditState();
+}
+
+class _EditState extends ConsumerState<Edit> {
+  
+  final _controller = CropController();
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
+      appBar: AppBar(title: const Text('Edit Photo')),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
-      floatingActionButton: FloatingActionButton(child: Text('Confirm'),onPressed: (){ref.read(photoProvider.notifier).state = imagePath;context.go('/grammar_correction');},),
+      body: Crop(
+        image: File(widget.imagePath).readAsBytesSync(),
+        controller: _controller,
+        onCropped: (image) async {
+          File newImg = await File(widget.imagePath).writeAsBytes(image,flush: true);
+          ref.read(photoProvider.notifier).state = newImg.path;
+          context.go('/grammar_correction');
+        },
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        child: Text('Confirm'),
+        onPressed: () {
+          _controller.crop();
+        },
+      ),
     );
   }
 }
