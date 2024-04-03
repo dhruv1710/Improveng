@@ -106,9 +106,12 @@ class Grammar extends ConsumerWidget {
                   // Text(value['errors'][0]['suggestion']),
                   error: (error, trace) => Text('An error occured'),
                   loading: () => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(height: 60),
+                          SizedBox(height: 40),
                           CircularProgressIndicator(),
+                          SizedBox(height: 10),
                           AnimatedTextKit(
                             animatedTexts: [
                               TyperAnimatedText(

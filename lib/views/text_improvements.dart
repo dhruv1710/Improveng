@@ -1,5 +1,4 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
@@ -32,19 +31,24 @@ class _TextImprovementState extends ConsumerState<TextImprovement> {
     List<dynamic> texts = response['text'].split('');
 
     List<InlineSpan>? textSpans = texts.map<InlineSpan>((e) {
-      return TextSpan(text: e);
+      return TextSpan(text: e, style: Theme.of(context).textTheme.titleLarge!);
     }).toList();
 
     for (final e in errors.reversed) {
       textSpans.replaceRange(e['startIndex'], e['endIndex'], [
-        TextSpan(
-            text: e['suggestions'].last,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(decoration: TextDecoration.underline),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () => errorDialog(context, e))
+        WidgetSpan(
+          child: InkWell(
+              onTap: () => errorDialog(context, e),
+              child: Card(
+                  color: Colors.deepPurple[50],
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
+                    child: Text(
+                      e['suggestion'],
+                      textScaler: TextScaler.linear(1.2),
+                    ),
+                  ))),
+        )
       ]);
     }
     String t = response['text'];
@@ -74,58 +78,74 @@ class _TextImprovementState extends ConsumerState<TextImprovement> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            title: Text('Text Improvements'),
+            title: Text(
+              'Text Improvements',
+              textScaler: TextScaler.linear(1.4),
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           SliverList.list(children: [
             !runnedAI
-                ? Column(
-                    children: [
-                      CircularProgressIndicator(),
-                      AnimatedTextKit(
-                        animatedTexts: [
-                          TyperAnimatedText(
-                            'Running AI ...',
-                            textStyle: const TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
+                ? Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 40),
+                        CircularProgressIndicator(),
+                        SizedBox(height: 10),
+                        AnimatedTextKit(
+                          animatedTexts: [
+                            TyperAnimatedText(
+                              'Running AI ...',
+                              textStyle: const TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              speed: const Duration(milliseconds: 80),
                             ),
-                            speed: const Duration(milliseconds: 80),
-                          ),
-                          TyperAnimatedText(
-                            'Rubbing your mistakes',
-                            textStyle: const TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
+                            TyperAnimatedText(
+                              'Rubbing your mistakes',
+                              textStyle: const TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              speed: const Duration(milliseconds: 80),
                             ),
-                            speed: const Duration(milliseconds: 80),
-                          ),
-                          TyperAnimatedText(
-                            'Evaluating...',
-                            textStyle: const TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
+                            TyperAnimatedText(
+                              'Evaluating...',
+                              textStyle: const TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              speed: const Duration(milliseconds: 80),
                             ),
-                            speed: const Duration(milliseconds: 80),
-                          ),
-                        ],
-                      )
-                    ],
+                          ],
+                        )
+                      ],
+                    ),
                   )
-                : Text.rich(TextSpan(
-                    children: ts,
-                    //texts.map<InlineSpan>((e) {
-                    // index += 1;
-                    // if (starts.contains(index)) {
-                    //   starts.removeAt(errorsIdx);
-                    //   texts.removeRange(index, ends[errorsIdx]);
-                    //   errorsIdx += 1;
-                    //   print(errorsIdx);
-                    //   return TextSpan(text: errors[errorsIdx-1]['suggestion']);
-                    // } else {
-                    // return TextSpan(text: e);
-                    // }
-                    // }).toList()
-                  ))
+                : Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        Text.rich(TextSpan(
+                          children: ts,
+                          //texts.map<InlineSpan>((e) {
+                          // index += 1;
+                          // if (starts.contains(index)) {
+                          //   starts.removeAt(errorsIdx);
+                          //   texts.removeRange(index, ends[errorsIdx]);
+                          //   errorsIdx += 1;
+                          //   print(errorsIdx);
+                          //   return TextSpan(text: errors[errorsIdx-1]['suggestion']);
+                          // } else {
+                          // return TextSpan(text: e);
+                          // }
+                          // }).toList()
+                        )),
+                      ],
+                    ),
+                  )
           ])
         ],
       ),

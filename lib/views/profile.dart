@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
@@ -7,6 +8,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -50,18 +53,22 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Set Profile'),
+        title: Text(
+          'Set Profile',
+          textScaler: TextScaler.linear(1.4),
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
-
       ),
       body: Form(
         key: _formKey,
         child: ListView(
-          
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
           children: [
             Divider(),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             GestureDetector(
               onTap: _pickImage,
               child: CircleAvatar(
@@ -81,12 +88,11 @@ class _ProfilePageState extends State<ProfilePage> {
             Center(
               child: TextFormField(
                 textAlign: TextAlign.center,
-                
                 controller: _nameController,
                 decoration: InputDecoration(
                   hintText: 'Name',
-                  border:OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white,width: 0),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 0),
                   ),
                   // labelText: 'Name',
                 ),
@@ -98,11 +104,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 25,
+            ),
             TextFormField(
               textAlign: TextAlign.center,
               controller: _emailController,
-               decoration: InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Email',
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white, width: 0),
@@ -116,10 +124,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 return null;
               },
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 40.0),
             FilledButton(
-              
-              style: ButtonStyle(elevation: MaterialStatePropertyAll(10),padding: MaterialStatePropertyAll(EdgeInsets.all(16))),
+              style: ButtonStyle(
+                  elevation: MaterialStatePropertyAll(10),
+                  padding: MaterialStatePropertyAll(EdgeInsets.all(16))),
               onPressed: _saveProfile,
               child: Text('Save Profile'),
             ),
