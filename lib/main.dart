@@ -7,7 +7,7 @@ import 'package:improveng/views/home.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-
+  await Hive.openBox('profile');
   runApp(ProviderScope(child: const MyApp()));
 }
 
