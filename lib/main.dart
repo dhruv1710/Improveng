@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:improveng/router/router.dart';
-import 'package:improveng/views/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Improveng',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        textTheme: GoogleFonts.fredokaTextTheme(Theme.of(context).textTheme),
         useMaterial3: true,
       ),
       routerConfig: router,
