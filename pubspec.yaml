@@ -38,6 +38,7 @@ dependencies:
   http: null
   introduction_screen: ^3.1.14
   riverpod_annotation: ^2.3.5
+  speech_to_text: ^6.6.1
   super_tooltip: ^2.0.7
 
 dev_dependencies:
