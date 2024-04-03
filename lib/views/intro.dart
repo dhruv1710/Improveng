@@ -1,11 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:improveng/views/photo.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-
 
 class Intro extends StatefulWidget {
   const Intro({super.key});
@@ -16,7 +11,10 @@ class Intro extends StatefulWidget {
 
 class _IntroState extends State<Intro> {
   List pages = [
-    {'title':'Improveng','desc':'In 30 mins for 30 days','image': "assets/imgs/english.png"
+    {
+      'title': 'Improveng',
+      'desc': 'In 30 mins for 30 days',
+      'image': "assets/imgs/english.png"
     },
     {
       'title': "Sessions",
@@ -59,9 +57,9 @@ class _IntroState extends State<Intro> {
       curve: Curves.fastLinearToSlowEaseIn,
       // controlsMargin: const EdgeInsets.fromLTRB(0,0,0,0 ),
       // controlsPadding: const EdgeInsets.all(16.0),
-      dotsDecorator: const DotsDecorator(
-        // spacing: EdgeInsets.fromLTRB(0, 0, 20, 0),
-        size: Size(10.0, 10.0),
+      dotsDecorator: DotsDecorator(
+        spacing: EdgeInsets.all(5),
+        size: Size(7.0, 7.0),
         color: Color(0xFFBDBDBD),
         activeSize: Size(22.0, 10.0),
         activeShape: RoundedRectangleBorder(
@@ -70,90 +68,137 @@ class _IntroState extends State<Intro> {
       ),
       dotsContainerDecorator: const ShapeDecoration(
         color: Colors.transparent,
-        
         shape: RoundedRectangleBorder(
-          
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
       ),
       pages: [
         PageViewModel(
           useScrollView: true,
-          title: "Improveng",
-          body:
-              "In 30 mins for 30 days",
+          titleWidget: Text(
+            "Improveng",
+            textScaler: TextScaler.linear(2.3),
+            style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+          ),
+          body: "In 30 mins for 30 days",
           image: Center(
             child: Image.asset("assets/imgs/english.png", height: 200.0),
           ),
           decoration: const PageDecoration(
-            // bodyTextStyle:
-            //     TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
+            bodyTextStyle:
+                TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0),
           ),
         ),
         PageViewModel(
-          title: "Sessions",
+          titleWidget: Text(
+            "Take Sessions",
+            textScaler: TextScaler.linear(2),
+            style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+          ),
           body: "Do everyday to improve english and better express yourself",
-          image:  Center(
+          image: Center(
             child: Image.asset("assets/imgs/session.png", height: 200.0),
           ),
           decoration: const PageDecoration(
             bodyTextStyle:
-                TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
+                TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0),
           ),
         ),
         PageViewModel(
-          title: "Write Essay",
-          body:
-              "Take photo to upload into improveng",
-          image:  Center(
+          titleWidget: Text(
+            "Write Essays",
+            textScaler: TextScaler.linear(2),
+            style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+          ),
+          body: "Take photo to upload into improveng",
+          image: Center(
             child: Image.asset("assets/imgs/essay.png", height: 200.0),
           ),
           decoration: const PageDecoration(
-            titleTextStyle: TextStyle(color: Colors.orange),
             bodyTextStyle:
-                TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
+                TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0),
           ),
         ),
         PageViewModel(
-          title: "Grammar Correction",
+          titleWidget: Text(
+            "Grammar Correction",
+            textScaler: TextScaler.linear(2),
+            style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+          ),
           body: "See what grammatical mistakes you did and understand",
-          image:  Center(
+          image: Center(
             child: Image.asset("assets/imgs/grammar.png", height: 200.0),
           ),
           decoration: const PageDecoration(
             bodyTextStyle:
-                TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
+                TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0),
           ),
         ),
         PageViewModel(
-          title: "Fluency and Clarity Improvement",
+          titleWidget: Text(
+            "Fluency and Clarity",
+            textScaler: TextScaler.linear(2),
+            style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+          ),
           body: "Rewrite your essay after looking at improvements",
-          image:  Center(
+          image: Center(
             child: Image.asset("assets/imgs/fluency.png", height: 200.0),
           ),
-          decoration:  PageDecoration(
+          decoration: PageDecoration(
             bodyTextStyle:
-                TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
+                TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0),
           ),
         ),
         PageViewModel(
-          title: "Finish off with Speaking",
+          titleWidget: Text(
+            "Finish off with speaking",
+            textScaler: TextScaler.linear(2),
+            style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+          ),
           body: "Read aloud to fit the grammar and improvements in your brain",
-          image:  Center(
+          image: Center(
             child: Image.asset("assets/imgs/speak.png", height: 200.0),
           ),
           decoration: const PageDecoration(
             bodyTextStyle:
-                TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
+                TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0),
           ),
         ),
         PageViewModel(
-          title: "Repeat",
-          body: "Consistently and you will change yourself",
-          image:  Center(
+          titleWidget: Text(
+            "Rinse and Repeat",
+            textScaler: TextScaler.linear(2),
+            style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+          ),
+          bodyWidget: Column(
+            children: [
+              Text(
+                "Consistently and you will change yourself",
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0),
+              ),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    60,
+                    20,
+                    20,
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      style:
+                          ButtonStyle(elevation: MaterialStatePropertyAll(10)),
+                      child: Text('Login'),
+                      onPressed: () {
+                        context.go('/home');
+                      },
+                    ),
+                  ))
+            ],
+          ),
+          image: Center(
             child: Image.asset("assets/imgs/technique.png", height: 200.0),
           ),
-          footer: Padding(padding: EdgeInsets.all(20),child: FilledButton(style: ButtonStyle(elevation: MaterialStatePropertyAll(10)),child: Text('Login'),onPressed: (){context.go('/home');},)),
           decoration: const PageDecoration(
             bodyTextStyle:
                 TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
@@ -165,7 +210,7 @@ class _IntroState extends State<Intro> {
       back: const Icon(Icons.arrow_back),
       // done: const Text("Login"),
       // onDone: (){
-        // context.go('/home');
+      // context.go('/home');
       // },
     );
   }
