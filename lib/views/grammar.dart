@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,37 +35,43 @@ class Grammar extends ConsumerWidget {
                     // // return Text('loloolo');
                     // int index = 0;
                     // int errorsIdx = 0;
+                    print("$value HEREROKAOKFKSODKFOCAKMOAKMCOFKMA");
                     List errors = value['errors'];
-                   
+
                     List<dynamic> texts = value['text'].split('');
-                    
+
                     List<InlineSpan>? textSpans = texts.map<InlineSpan>((e) {
                       return TextSpan(text: e);
-                      
                     }).toList();
                     for (final e in errors.reversed) {
-                      textSpans.replaceRange(
-                          e['startIndex'], e['endIndex'], [TextSpan(text: e['suggestion'],
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(decoration: TextDecoration.underline),recognizer: TapGestureRecognizer()..onTap = ()=>errorDialog(context,e))]);
+                      textSpans.replaceRange(e['startIndex'], e['endIndex'], [
+                        TextSpan(
+                            text: e['suggestion'],
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(decoration: TextDecoration.underline),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => errorDialog(context, e))
+                      ]);
                     }
                     String correctText = value['text'];
-                    
-                    for(final e in errors.reversed){
-                      correctText = correctText.replaceRange(e['startIndex'], e['endIndex'], e['suggestion']);
+
+                    for (final e in errors.reversed) {
+                      correctText = correctText.replaceRange(
+                          e['startIndex'], e['endIndex'], e['suggestion']);
                     }
                     ctext = correctText;
                     print(ctext);
-                    Hive.openBox('essays').then((Box essayBox) => essayBox.add({'grammar':errors}));
-                    
+                    Hive.openBox('essays').then(
+                        (Box essayBox) => essayBox.add({'grammar': errors}));
+
                     // return Text('loloolo');
-                    
+
                     // print('lol');
                     return Text.rich(TextSpan(
-                        children: textSpans,
-                        //texts.map<InlineSpan>((e) {
+                      children: textSpans,
+                      //texts.map<InlineSpan>((e) {
                       // index += 1;
                       // if (starts.contains(index)) {
                       //   starts.removeAt(errorsIdx);
@@ -75,11 +80,10 @@ class Grammar extends ConsumerWidget {
                       //   print(errorsIdx);
                       //   return TextSpan(text: errors[errorsIdx-1]['suggestion']);
                       // } else {
-                        // return TextSpan(text: e);
+                      // return TextSpan(text: e);
                       // }
-                    // }).toList()
-                    )
-                    );
+                      // }).toList()
+                    ));
                   },
                   // Text(value['errors'][0]['suggestion']),
                   error: (error, trace) => Text('An error occured'),
@@ -93,14 +97,29 @@ class Grammar extends ConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){Navigator.of(context).push(MaterialPageRoute(builder: (context)=>TextImprovement(ctext)));},child: Text('Next'),),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => TextImprovement(ctext)));
+        },
+        child: Text('Next'),
+      ),
     );
   }
-  errorDialog(context,error){
-    return showDialog(context: context, builder: (context)=>AlertDialog(title: Text.rich(TextSpan(children: [TextSpan(text: error['originalText'],
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall!
-                        .copyWith(decoration: TextDecoration.lineThrough,color: Colors.red)),TextSpan(text: '-> ${error['suggestion']}')])),content: Text(error['correctionType']),));
+
+  errorDialog(context, error) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text.rich(TextSpan(children: [
+                TextSpan(
+                    text: error['originalText'],
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.red)),
+                TextSpan(text: '-> ${error['suggestion']}')
+              ])),
+              content: Text(error['correctionType']),
+            ));
   }
 }
