@@ -26,7 +26,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     super.initState();
     initialize();
   }
-  initialize()async{
+
+  initialize() async {
     final cameras = await availableCameras();
     final camera = cameras.first;
     // To display the current output from the Camera,
@@ -41,9 +42,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
     setState(() {
-      init=true;
+      init = true;
     });
   }
+
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
@@ -58,19 +60,22 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
-      body: init?FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
-          } else {
-            // Otherwise, display a loading indicator.
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ):CircularProgressIndicator(),
+      body: init
+          ? FutureBuilder<void>(
+              future: _initializeControllerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  // If the Future is complete, display the preview.
+                  return CameraPreview(_controller);
+                } else {
+                  // Otherwise, display a loading indicator.
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            )
+          : CircularProgressIndicator(),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 140, 86, 231),
         // Provide an onPressed callback.
         onPressed: () async {
           // Take the Picture in a try / catch block. If anything goes wrong,
@@ -82,10 +87,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             // Attempt to take a picture and get the file `image`
             // where it was saved.
             final image = await _controller.takePicture();
-           
+
             if (!context.mounted) return;
 
-            
             await Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => Edit(
@@ -100,7 +104,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             // print(e);
           }
         },
-        child: const Icon(Icons.camera_alt),
+        child: const Icon(
+          Icons.camera_alt,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -108,14 +115,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
 // A widget that displays the picture taken by the user.
 class Edit extends ConsumerStatefulWidget {
-  const Edit(this.imagePath,{super.key});
+  const Edit(this.imagePath, {super.key});
   final String imagePath;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EditState();
 }
 
 class _EditState extends ConsumerState<Edit> {
-  
   final _controller = CropController();
   @override
   Widget build(BuildContext context) {
@@ -127,14 +133,19 @@ class _EditState extends ConsumerState<Edit> {
         image: File(widget.imagePath).readAsBytesSync(),
         controller: _controller,
         onCropped: (image) async {
-          File newImg = await File(widget.imagePath).writeAsBytes(image,flush: true);
+          File newImg =
+              await File(widget.imagePath).writeAsBytes(image, flush: true);
           ref.read(photoProvider.notifier).state = newImg.path;
           context.go('/grammar_correction');
         },
       ),
 
       floatingActionButton: FloatingActionButton(
-        child: Text('Confirm'),
+        backgroundColor: Color.fromARGB(255, 140, 86, 231),
+        child: Icon(
+          Icons.check,
+          color: Colors.white,
+        ),
         onPressed: () {
           _controller.crop();
         },

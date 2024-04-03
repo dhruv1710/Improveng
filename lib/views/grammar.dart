@@ -1,4 +1,4 @@
-import 'package:flutter/gestures.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
@@ -17,7 +17,11 @@ class Grammar extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            title: Text('Grammar correction'),
+            title: Text(
+              'Grammar correction',
+              textScaler: TextScaler.linear(1.4),
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           SliverList.list(
             children: [
@@ -41,18 +45,25 @@ class Grammar extends ConsumerWidget {
                     List<dynamic> texts = value['text'].split('');
 
                     List<InlineSpan>? textSpans = texts.map<InlineSpan>((e) {
-                      return TextSpan(text: e);
+                      return TextSpan(
+                          text: e,
+                          style: Theme.of(context).textTheme.titleLarge!);
                     }).toList();
                     for (final e in errors.reversed) {
                       textSpans.replaceRange(e['startIndex'], e['endIndex'], [
-                        TextSpan(
-                            text: e['suggestion'],
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(decoration: TextDecoration.underline),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => errorDialog(context, e))
+                        WidgetSpan(
+                          child: InkWell(
+                              onTap: () => errorDialog(context, e),
+                              child: Card(
+                                  color: Colors.deepPurple[50],
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
+                                    child: Text(
+                                      e['suggestion'],
+                                      textScaler: TextScaler.linear(1.2),
+                                    ),
+                                  ))),
+                        )
                       ]);
                     }
                     String correctText = value['text'];
@@ -69,28 +80,63 @@ class Grammar extends ConsumerWidget {
                     // return Text('loloolo');
 
                     // print('lol');
-                    return Text.rich(TextSpan(
-                      children: textSpans,
-                      //texts.map<InlineSpan>((e) {
-                      // index += 1;
-                      // if (starts.contains(index)) {
-                      //   starts.removeAt(errorsIdx);
-                      //   texts.removeRange(index, ends[errorsIdx]);
-                      //   errorsIdx += 1;
-                      //   print(errorsIdx);
-                      //   return TextSpan(text: errors[errorsIdx-1]['suggestion']);
-                      // } else {
-                      // return TextSpan(text: e);
-                      // }
-                      // }).toList()
-                    ));
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text.rich(TextSpan(
+                            children: textSpans,
+                            //texts.map<InlineSpan>((e) {
+                            // index += 1;
+                            // if (starts.contains(index)) {
+                            //   starts.removeAt(errorsIdx);
+                            //   texts.removeRange(index, ends[errorsIdx]);
+                            //   errorsIdx += 1;
+                            //   print(errorsIdx);
+                            //   return TextSpan(text: errors[errorsIdx-1]['suggestion']);
+                            // } else {
+                            // return TextSpan(text: e);
+                            // }
+                            // }).toList()
+                          )),
+                        ),
+                      ],
+                    );
                   },
                   // Text(value['errors'][0]['suggestion']),
                   error: (error, trace) => Text('An error occured'),
                   loading: () => Column(
                         children: [
+                          SizedBox(height: 60),
                           CircularProgressIndicator(),
-                          Text('Running AI')
+                          AnimatedTextKit(
+                            animatedTexts: [
+                              TyperAnimatedText(
+                                'Running AI ...',
+                                textStyle: const TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                speed: const Duration(milliseconds: 80),
+                              ),
+                              TyperAnimatedText(
+                                'Rubbing your mistakes',
+                                textStyle: const TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                speed: const Duration(milliseconds: 80),
+                              ),
+                              TyperAnimatedText(
+                                'Evaluating...',
+                                textStyle: const TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                speed: const Duration(milliseconds: 80),
+                              ),
+                            ],
+                          )
                         ],
                       )),
             ],
@@ -98,11 +144,15 @@ class Grammar extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 140, 86, 231),
         onPressed: () {
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => TextImprovement(ctext)));
         },
-        child: Text('Next'),
+        child: Icon(
+          Icons.keyboard_double_arrow_right_sharp,
+          color: Colors.white,
+        ),
       ),
     );
   }
