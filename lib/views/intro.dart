@@ -188,9 +188,9 @@ class _IntroState extends State<Intro> {
                     child: FilledButton(
                       style:
                           ButtonStyle(elevation: MaterialStatePropertyAll(10)),
-                      child: Text('Login'),
+                      child: Text("Let's Go"),
                       onPressed: () {
-                        context.go('/home');
+                        context.go('/profile');
                       },
                     ),
                   ))

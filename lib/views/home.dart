@@ -7,7 +7,8 @@ import 'package:improveng/views/pastEssay.dart';
 import 'package:improveng/views/photo.dart';
 
 class Home extends ConsumerWidget {
-  const Home({super.key});
+  Home({super.key});
+  final profile = Hive.box('profile');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +39,7 @@ class Home extends ConsumerWidget {
                   children: [
                     SizedBox(height: screenHeight / 25),
                     Text(
-                      'Hello Dhruv',
+                      'Hello ${profile.get('name')}',
                       textScaler: TextScaler.linear(2),
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.w500),
@@ -59,8 +60,8 @@ class Home extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://cdn.discordapp.com/attachments/1012398048745373697/1219945338719178852/brooke-cagle-pJqfhKUpCh8-unsplash.jpg?ex=66166022&is=6603eb22&hm=a61f5fbb2886387ef2faccc460c0877fbd28f21e911ec839fa1b84e060ea9b83&'),
+                  backgroundImage: MemoryImage(
+                      profile.get('image')),
                 ),
               )
             ],
