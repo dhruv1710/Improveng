@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:improveng/controllers/pastEsssays.dart';
@@ -60,14 +59,12 @@ class Home extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                 child: CircleAvatar(
-                  backgroundImage: MemoryImage(
-                      profile.get('image')),
+                  backgroundImage: MemoryImage(profile.get('image')),
                 ),
               )
             ],
           ),
-          SliverList.list(
-              children: [
+          SliverList.list(children: [
             // Text(
             //   'Hello Dhruv',
             //   style: Theme.of(context).textTheme.headlineSmall,
@@ -113,7 +110,6 @@ class Home extends ConsumerWidget {
                             style: TextStyle(
                                 color: Color.fromARGB(120, 255, 255, 255),
                                 fontWeight: FontWeight.w500),
-                            
                           ),
                         ],
                       ),
@@ -129,82 +125,82 @@ class Home extends ConsumerWidget {
               ),
             ),
             FutureBuilder(
-  future: pastEssays,
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return Center(child: CircularProgressIndicator());
-    } else if (snapshot.hasError) {
-      return Center(child: Text('Error: ${snapshot.error}'));
-    } else if (snapshot.hasData) {
-      return ListView.builder(
-        shrinkWrap: true,
-        itemCount: snapshot.data!.keys.length,
-        itemBuilder: (context, idx) {
-          return Padding(
+              future: pastEssays,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (snapshot.hasData) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.keys.length,
+                    itemBuilder: (context, idx) {
+                      return Padding(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: SizedBox(
-                            height: 300,
                             child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text('Essay #${idx+1}',style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge!
-                                            .copyWith(color: Colors.black),),
-                                    Center(
-                                      child: Text(
-                                        snapshot.data![(snapshot.data!.length-1) - idx]['text'][0] ??
-                                            'No text',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .copyWith(color: Colors.black),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                        width: 300,
-                                        child: FilledButton(
-                                          
-                                            onPressed: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          PastEssayView({'essay':
-                                                               snapshot
-                                                                    .data![(snapshot
-                                                                            .data!
-                                                                            .length -
-                                                                        1) -
-                                                                    idx]['text'][0],'id':idx,
-                                                              },
-                                                              snapshot.data![idx]
-                                                                  ['grammar'],
-                                                              snapshot.data![idx][
-                                                                  'improvements'])));
-                                            },
-                                            child:
-                                                Text('Mistakes & Improvements')))
-                                  ],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Essay #${idx + 1}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(color: Colors.black),
                                 ),
-                              ),
-                            )),
+                                Center(
+                                  child: Text(
+                                    snapshot.data![(snapshot.data!.length - 1) -
+                                            idx]['text'][0] ??
+                                        'No text',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(color: Colors.black),
+                                  ),
+                                ),
+                                SizedBox(
+                                    width: 300,
+                                    child: FilledButton(
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PastEssayView(
+                                                          {
+                                                            'essay': snapshot
+                                                                .data![(snapshot
+                                                                        .data!
+                                                                        .length -
+                                                                    1) -
+                                                                idx]['text'][0],
+                                                            'id': idx,
+                                                          },
+                                                          snapshot.data![idx]
+                                                              ['grammar'],
+                                                          snapshot.data![idx][
+                                                              'improvements'])));
+                                        },
+                                        child: Text('Mistakes & Improvements')))
+                              ],
+                            ),
+                          ),
+                        )),
                       );
-        },
-      );
-    } else {
-      return Center(child: Text('No data'));
-    }
-  },
-)
-              
-            
-            
+                    },
+                  );
+                } else {
+                  return Center(child: Text('No data'));
+                }
+              },
+            )
           ]),
         ],
       ),

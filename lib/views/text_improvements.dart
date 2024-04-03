@@ -16,6 +16,7 @@ class TextImprovement extends ConsumerStatefulWidget {
 
 class _TextImprovementState extends ConsumerState<TextImprovement> {
   bool runnedAI = false;
+  String text = "";
   List<InlineSpan> ts = [];
   @override
   void initState() {
@@ -25,6 +26,7 @@ class _TextImprovementState extends ConsumerState<TextImprovement> {
 
   runTextAI() async {
     final response = await TextAPI().text_improvement(widget.text);
+
     print(response);
     List errors = response['errors'];
 
@@ -44,7 +46,7 @@ class _TextImprovementState extends ConsumerState<TextImprovement> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
                     child: Text(
-                      e['suggestion'],
+                      e?['suggestion'],
                       textScaler: TextScaler.linear(1.2),
                     ),
                   ))),
@@ -59,6 +61,7 @@ class _TextImprovementState extends ConsumerState<TextImprovement> {
     Map data = essayBox.getAt(essayBox.length - 1);
     // need to provide list as hive does not accept string
     data['text'] = [t];
+    text = t;
     data['improvements'] = errors;
     essayBox.putAt(essayBox.length - 1, data);
     ref.read(pastEssayProvider.notifier).addEssay(data, essayBox.length - 1);
@@ -152,8 +155,10 @@ class _TextImprovementState extends ConsumerState<TextImprovement> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromARGB(255, 140, 86, 231),
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => LastPage()));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => LastPage(
+                    text: text,
+                  )));
         },
         child: Icon(
           Icons.keyboard_double_arrow_right_rounded,

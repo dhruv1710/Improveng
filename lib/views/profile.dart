@@ -92,8 +92,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 decoration: InputDecoration(
                   hintText: 'Name',
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 0),
-                  ),
+                      borderSide: BorderSide(color: Colors.white, width: 0),
+                      borderRadius: BorderRadius.circular(20)),
                   // labelText: 'Name',
                 ),
                 validator: (value) {
@@ -113,8 +113,8 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: InputDecoration(
                 hintText: 'Email',
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 0),
-                ),
+                    borderSide: BorderSide(color: Colors.white, width: 0),
+                    borderRadius: BorderRadius.circular(20)),
                 // labelText: 'Name',
               ),
               validator: (value) {
