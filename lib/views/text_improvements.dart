@@ -46,7 +46,7 @@ class _TextImprovementState extends ConsumerState<TextImprovement> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
                     child: Text(
-                      e?['suggestion'],
+                      e['suggestions'].last??'',
                       textScaler: TextScaler.linear(1.2),
                     ),
                   ))),

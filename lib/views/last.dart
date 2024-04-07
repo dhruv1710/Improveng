@@ -38,6 +38,8 @@ class LastPage extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: AnimatedTextKit(
+              repeatForever: false,
+              totalRepeatCount: 1,
               animatedTexts: [
                 TyperAnimatedText(
                   text ?? "", // Use empty string if text is null

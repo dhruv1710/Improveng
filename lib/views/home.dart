@@ -136,6 +136,7 @@ class Home extends ConsumerWidget {
                     shrinkWrap: true,
                     itemCount: snapshot.data!.keys.length,
                     itemBuilder: (context, idx) {
+                      print('wn ${snapshot.data}');
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: SizedBox(
@@ -157,8 +158,7 @@ class Home extends ConsumerWidget {
                                 ),
                                 Center(
                                   child: Text(
-                                    snapshot.data![(snapshot.data!.length - 1) -
-                                            idx]['text'][0] ??
+                                    snapshot.data![(snapshot.data!.keys.length - 1)-idx]['text'][0] ??
                                         'No text',
                                     style: Theme.of(context)
                                         .textTheme
